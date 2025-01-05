@@ -1,0 +1,63 @@
+version: '3.7'
+services:
+  sandbox-hdp:
+    image: hortonworks/sandbox-hdp:3.0.1
+    container_name: sandbox-hdp
+    hostname: sandbox-hdp.hortonworks.com
+    privileged: true
+    ports:
+      # SSH доступ
+      - "2222:22"         # SSH доступ
+      # Ambari Web
+      - "8081:8080"       # Ambari
+      # Apache Ranger
+      - "6080:6080"       # Ranger Web UI
+      # Apache Atlas
+      - "21000:21000"     # Atlas
+      # HDFS
+      - "50070:50070"     # HDFS Web UI
+      - "9995:9995"       # HDFS Logs
+      # YARN
+      - "8088:8088"       # YARN ResourceManager Web UI
+      - "19888:19888"     # YARN Job History
+      # Spark
+      - "18081:18081"     # Spark Job History
+      # Hive
+      - "10000:10000"     # HiveServer2 JDBC
+      - "11000:11000"     # WebHCat
+      # Zeppelin
+      - "8744:8744"       # Zeppelin Web UI
+    volumes:
+      # Настройка томов для хранения данных служб
+      - hdp-data:/hadoop/data
+      - hdp-logs:/hadoop/logs
+      - hdp-config:/hadoop/config
+      # Том для настройки Ranger
+      - ranger-config:/etc/ranger
+      - ranger-data:/var/lib/ranger
+      # Том для Atlas
+      - atlas-config:/etc/atlas
+      - atlas-data:/var/lib/atlas
+      - ambari-data:/var/lib/ambari-server # Данные Ambari
+      - hdfs-data:/hadoop/dfs # Данные HDFS
+      - spark-logs:/var/log/spark # Логи Spark
+      - zeppelin-data:/usr/zeppelin/notebook # Данные Zeppelin
+    environment:
+      - AMBARI_SERVER=YES
+      #- AMBARI_ADMIN_PASSWORD=myadminpassword  # Новый пароль для admin
+      #- ROOT_PASSWORD=myrootpassword           # Новый пароль для root
+volumes:
+  # Общие тома для Hadoop и Ambari
+  hdp-data:
+  hdp-logs:
+  hdp-config:
+  # Том для хранения данных и конфигураций Apache Ranger
+  ranger-config:
+  ranger-data:
+  # Том для хранения данных и конфигураций Apache Atlas
+  atlas-config:
+  atlas-data:
+  ambari-data:
+  hdfs-data:
+  spark-logs:
+  zeppelin-data:
